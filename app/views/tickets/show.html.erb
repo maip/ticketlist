@@ -1,14 +1,56 @@
-<p id="notice"><%= notice %></p>
+<style>
+  #ticket {
+    width: 90%;
+    min-width: 500px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    border: outset;
+    padding-left: 50px;
+    padding-bottom: 15px;
+    padding-top: 25px;
+    border-radius: 20px;
+  }
+</style>
+
+<div id="ticket">
+
+<% Time.zone = 'MST' %>
+<% event = Event.find(@ticket.event_id) %>
+
+<p><%= link_to (image_tag event.photo.url(:medium)), event %></p>
+
 
 <p>
-  <strong>Event:</strong>
-  <%= @ticket.event %>
+  <strong>Event title:</strong>
+  <%= event.title %>
 </p>
 
 <p>
-  <strong>Num booked:</strong>
+  <strong>Event type:</strong>
+  <%= event.event_type %>
+</p>
+
+<p>
+  <strong>Event date:</strong>
+  <%= event.datetime.strftime("%m/%d/%Y %I:%M%p") %>
+</p>
+
+<p>
+  <strong>Event venue:</strong>
+  <%= event.venue %>
+</p>
+
+
+<p>
+  <strong>Number of tickets booked:</strong>
   <%= @ticket.num_booked %>
 </p>
 
+
 <%= link_to 'Edit', edit_ticket_path(@ticket) %> |
 <%= link_to 'Back', tickets_path %>
+
+</div>
+

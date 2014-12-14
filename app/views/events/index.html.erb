@@ -1,37 +1,75 @@
-<h1>Listing events</h1>
+<style>
+#events_page {
+    width: 90%;
+    min-width: 500px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    border: outset;
+    padding-left: 50px;
+    padding-bottom: 15px;
+    padding-top: 25px;
+    border-radius: 20px;
+}
+
+table th{
+  padding: 0 30px;
+  border-bottom: double;
+}
+
+tbody td{
+  padding: 0 30px;
+}
+
+.num-tickets {
+  text-align: center;
+}
+</style>
+
+
+
+<div id="events_page">
+  <% if user_signed_in? %>
+
+  <p>Your TicketList is listed by event time. Events with a date and time older than the current date and time will not be displayed. Click on the thumbnail of an event to find out more.</p>
 
 <table>
+  <% if !@events.empty? %>
   <thead>
     <tr>
+      <th></th>
       <th>Title</th>
-      <th>Type</th>
-      <th>Date</th>
-      <th>Time</th>
-      <th>Venue</th>
-      <th>Available tickets</th>
-      <th>Total tickets</th>
       <th colspan="3"></th>
     </tr>
   </thead>
-
+  <% else %>
+  There are no events. Create one to get started.
+  <% end %>
+  
+  <% Time.zone = 'MST' %>
   <tbody>
     <% @events.each do |event| %>
-      <tr>
-        <td><%= event.title %></td>
-        <td><%= event.type %></td>
-        <td><%= event.date %></td>
-        <td><%= event.time %></td>
-        <td><%= event.venue %></td>
-        <td><%= event.available_tickets %></td>
-        <td><%= event.total_tickets %></td>
-        <td><%= link_to 'Show', event %></td>
-        <td><%= link_to 'Edit', edit_event_path(event) %></td>
-        <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+      <% if event.datetime >= DateTime.current %>
+        <tr>
+          <td><%= link_to (image_tag event.photo.url(:small)), event %></td>
+          <td><%= event.title %></td>
+          <td><%= link_to 'Show', event %></td>
+          <% if event.user_id == current_user.id %>
+            <td><%= link_to 'Edit', edit_event_path(event) %></td>
+            <td><%= link_to 'Destroy', event, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
 
 <br>
 
-<%= link_to 'New Event', new_event_path %>
+<%= link_to 'New Event', new_event_path %><br><br><p>Want to see your booked tickets? <%= link_to 'View now.', tickets_path %></p>
+  <% else %>
+	An online ticket booking web application.
+  <% end %>
+</div>
+

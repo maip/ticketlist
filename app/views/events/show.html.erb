@@ -1,4 +1,24 @@
-<p id="notice"><%= notice %></p>
+<style>
+  #event {
+    width: 90%;
+    min-width: 500px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30px;
+    border: outset;
+    padding-left: 50px;
+    padding-bottom: 15px;
+    padding-top: 25px;
+    border-radius: 20px;
+  }
+</style>
+
+<div id="event">
+
+<p>All ticket sales are final.</p>
+
+<p><%= image_tag @event.photo.url(:medium) %></p>
 
 <p>
   <strong>Title:</strong>
@@ -6,18 +26,15 @@
 </p>
 
 <p>
-  <strong>Type:</strong>
-  <%= @event.type %>
+  <strong>Event type:</strong>
+  <%= @event.event_type %>
+
 </p>
 
+<% Time.zone = 'MST' %>
 <p>
-  <strong>Date:</strong>
-  <%= @event.date %>
-</p>
-
-<p>
-  <strong>Time:</strong>
-  <%= @event.time %>
+  <strong>Date and time:</strong>
+   <%= @event.datetime.strftime("%m/%d/%Y %I:%M%p") %>
 </p>
 
 <p>
@@ -35,5 +52,21 @@
   <%= @event.total_tickets %>
 </p>
 
+<p>
+  <%= form_tag(tickets_path, :method => :post) do %>
+  <%= hidden_field(:ticket, :event_id, :value => @event.id) %>
+  <% if @event.available_tickets == 0 %>
+    No more available tickets.
+  <% else %>
+    <%= number_field(:ticket, :num_booked, value: 1, in: 1...@event.available_tickets+1) %>
+    <%= submit_tag("Book") %>
+  <% end %>
+<% end %>
+
+</p>
+
 <%= link_to 'Edit', edit_event_path(@event) %> |
 <%= link_to 'Back', events_path %>
+
+</div>
+
